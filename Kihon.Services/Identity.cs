@@ -23,7 +23,6 @@
 namespace Kihon.Services
 {
     using System;
-    using System.Security.Cryptography;
     using System.Text;
 
     /// <summary>
