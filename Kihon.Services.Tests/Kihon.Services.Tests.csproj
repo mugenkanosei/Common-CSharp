@@ -49,6 +49,7 @@
     <Compile Include="MurmurHash3Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetOnceTests.cs" />
+    <Compile Include="ValueTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Kihon.Services\Kihon.Services.csproj">

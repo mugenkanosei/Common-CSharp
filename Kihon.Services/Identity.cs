@@ -29,12 +29,12 @@ namespace Kihon.Services
     /// This class is a generic class template for all EntityId classes.
     /// </summary>
     /// <typeparam name="T">The identity type.</typeparam>
-    public class Identity<T>
+    public class Identity<T> : Value<Identity<T>>
     {
         /// <summary>
         /// Backing field used by the Value property.
         /// </summary>
-        private string valueStore;
+        private readonly SetOnce<string> valueStore = new SetOnce<string>("valueStore");
 
         /// <summary>
         ///  Initializes a new instance of the <see cref="Identity{T}" /> class. 
@@ -60,192 +60,21 @@ namespace Kihon.Services
             {
                 if (String.IsNullOrEmpty(value))
                 {
-                    throw new System.ArgumentNullException();
+                    throw new System.ArgumentNullException("Identity cannot be empty or null.");
                 }
 
-                valueStore = value;
+                valueStore.Value = value;
             }
         }
 
-        /// <summary>
-        /// Compares the object on the left with the <see cref="Identity"/> on the right for value equality.
-        /// </summary>
-        /// <param name="leftSide">
-        /// Type: <see cref="System.Object"/>
-        /// The first object to compare, or null.
-        /// </param>
-        /// <param name="rightSide">
-        /// Type: <see cref="Identity"/>
-        /// The second identity to compare, or null.
-        /// </param>
-        /// <returns>
-        /// Type: <see cref="System.Boolean"/>
-        /// <c>true</c> if the value of leftSide is the same as the value of rightSide; otherwise, false.
-        /// </returns>
-        public static bool operator ==(object leftSide, Identity<T> rightSide)
+        protected override bool CompareEquality(Identity<T> obj)
         {
-            return leftSide as Identity<T> == rightSide;
+            return this.Value == obj.Value;
         }
 
-        /// <summary>
-        /// Compares the object on the left with the <see cref="Identity"/> on the right for value inequality.
-        /// </summary>
-        /// <param name="leftSide">
-        /// Type: <see cref="System.Object"/>
-        /// The first object to compare, or null.
-        /// </param>
-        /// <param name="rightSide">
-        /// Type: <see cref="Identity"/>
-        /// The second identity to compare, or null.
-        /// </param>
-        /// <returns>
-        /// Type: <see cref="System.Boolean"/>
-        /// <c>true</c> if the value of leftSide is different from the value of rightSide; otherwise, false.
-        /// </returns>
-        public static bool operator !=(object leftSide, Identity<T> rightSide)
+        protected override string ValueStateAsString()
         {
-            return !(leftSide as Identity<T> == rightSide);
-        }
-
-        /// <summary>
-        /// Compares the <see cref="Identity"/> on the left with the object on the right for value equality.
-        /// </summary>
-        /// <param name="leftSide">
-        /// Type: <see cref="Identity"/>
-        /// The first identity to compare, or null.
-        /// </param>
-        /// <param name="rightSide">
-        /// Type: <see cref="System.Object"/>
-        /// The second object to compare, or null.
-        /// </param>
-        /// <returns>
-        /// Type: <see cref="System.Boolean"/>
-        /// <c>true</c> if the value of leftSide is the same as the value of rightSide; otherwise, false.
-        /// </returns>
-        public static bool operator ==(Identity<T> leftSide, object rightSide)
-        {
-            return leftSide == rightSide as Identity<T>;
-        }
-
-        /// <summary>
-        /// Compares the <see cref="Identity"/> on the left with the object on the right for value inequality.
-        /// </summary>
-        /// <param name="leftSide">
-        /// Type: <see cref="Identity"/>
-        /// The first identity to compare, or null.
-        /// </param>
-        /// <param name="rightSide">
-        /// Type: <see cref="System.Object"/>
-        /// The second object to compare, or null.
-        /// </param>
-        /// <returns>
-        /// Type: <see cref="System.Boolean"/>
-        /// <c>true</c> if the value of leftSide is different from the value of rightSide; otherwise, false.
-        /// </returns>
-        public static bool operator !=(Identity<T> leftSide, object rightSide)
-        {
-            return !(leftSide == rightSide as Identity<T>);
-        }
-
-        /// <summary>
-        /// Compares the <see cref="Identity"/> on the left with the <see cref="Identity"/> on the right for value equality.
-        /// </summary>
-        /// <param name="leftSide">
-        /// Type: <see cref="Identity"/>
-        /// The first identity to compare, or null.
-        /// </param>
-        /// <param name="rightSide">
-        /// Type: <see cref="Identity"/>
-        /// The second identity to compare, or null.
-        /// </param>
-        /// <returns>
-        /// Type: <see cref="System.Boolean"/>
-        /// <c>true</c> if the value of leftSide is the same as the value of rightSide; otherwise, false.
-        /// </returns>
-        public static bool operator ==(Identity<T> leftSide, Identity<T> rightSide)
-        {
-            if (object.ReferenceEquals(leftSide, rightSide))
-            {
-                return true;
-            }
-
-            if (((object)leftSide == null) || ((object)rightSide == null))
-            {
-                return false;
-            }
-
-            return leftSide.Value == rightSide.Value;
-        }
-
-        /// <summary>
-        /// Compares the <see cref="Identity"/> on the left with the <see cref="Identity"/> on the right for value inequality.
-        /// </summary>
-        /// <param name="leftSide">
-        /// Type: <see cref="Identity"/>
-        /// The first identity to compare, or null.
-        /// </param>
-        /// <param name="rightSide">
-        /// Type: <see cref="Identity"/>
-        /// The second identity to compare, or null.
-        /// </param>
-        /// <returns>
-        /// Type: <see cref="System.Boolean"/>
-        /// <c>true</c> if the value of leftSide is different from the value of rightSide; otherwise, false.
-        /// </returns>
-        public static bool operator !=(Identity<T> leftSide, Identity<T> rightSide)
-        {
-            return !(leftSide == rightSide);
-        }
-
-        /// <summary>
-        /// Compares the referenced <see cref="System.Object"/> with the <see cref="Identity"/> for value equality.
-        /// </summary>
-        /// <param name="obj">
-        /// Type: <see cref="System.Object"/>
-        /// The object to compare, or null.
-        /// </param>
-        /// <returns>
-        /// Type: <see cref="System.Boolean"/>
-        /// <c>true</c> if the referenced object is equal in value to this identity.
-        /// </returns>
-        public override bool Equals(object obj)
-        {
-            return this == obj as Identity<T>;
-        }
-
-        /// <summary>
-        /// Compares the referenced <see cref="Identity"/> with the <see cref="Identity"/> for value equality.
-        /// </summary>
-        /// <param name="anIdentity">
-        /// Type: <see cref="Identity"/>
-        /// The identity to compare, or null
-        /// </param>
-        /// <returns>
-        /// Type: <see cref="System.Boolean"/>
-        /// <c>true</c> if the referenced identity is equal in value to this identity.
-        /// </returns>
-        public bool Equals(Identity<T> anIdentity)
-        {
-            return this == anIdentity;
-        }
-
-        /// <summary>
-        /// Returns an integer hash code for the identity.
-        /// </summary>
-        /// <returns>
-        /// Type: <see cref="System.Int32"/>
-        /// Returns the same integer hash for two identity instances that are equal in both type and value.
-        /// </returns>
-        public override int GetHashCode()
-        {
-            string typeName = this.GetType().Name;
-            string value = this.Value;
-
-            byte[] data = Encoding.ASCII.GetBytes(typeName + value);
-
-            byte[] hashCode = MurmurHash3.ComputeHash32(data, 0);
-
-            return BitConverter.ToInt32(hashCode, 0);
+            return this.Value;
         }
     }
 }
